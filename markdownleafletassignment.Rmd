@@ -1,0 +1,64 @@
+---
+title: "A simple map application"
+author: "Alejandro Borges Sanchez"
+date: "6/22/2021"
+output: ioslides_presentation
+---
+
+## Breweries dataset
+
+OKay, some somewhat advanced for what weve seen so far, but there exists a dataset listing some breweries in germany. It is not a normal dataframe, but a spatial points dataframe, which are data structures designed for geo/spatial operations. Look at it!
+
+```{r}
+library(leaflet)
+data("breweries91")
+br<-breweries91
+```
+
+## Breweries dataset
+
+```{r }
+
+str(br)
+```
+
+## Breweries dataset
+
+-   So you can see this dataset is an object (denoted by having attributes with the \@ sign before them), and one of them is "data" which is the data itself *brewery, address...*, and then all the rest are attributes for geospatial operations: *coordinates, bounding boxes, projection string*...
+
+## So whats up!?
+
+### Lets fly to germany and see where we gonna pound down some cold ones!
+
+-   This objects are called "st" objects and leaflet knows nothing about them.
+-   Leaflet prefers dataframes with lat, long variables or a more modern kind of spatial dataframe called "sf", from the sf package (spatial features)
+-   Now lets see where we gonna go drink some!
+
+## Find your brewer!
+
+```{r echo=FALSE}
+library(sf)
+sf::st_as_sf(breweries91)%>%
+    leaflet()%>%
+    addTiles()%>%
+    addMarkers(popup = ~paste0("Name: ",brewery,"<br>",
+                               "Address: ",address,"<br>",
+                               "Village: ",village,"<br>",
+                               "Founded: ",founded,"<br>"))
+```
+
+### The code is in the next page
+
+## Code
+
+```{r eval=FALSE}
+sf::st_as_sf(breweries91)%>%
+    leaflet()%>%
+    addTiles()%>%
+    addMarkers(popup = ~paste0("Name: ",brewery,"<br>",
+                               "Address: ",address,"<br>",
+                               "Village: ",village,"<br>",
+                               "Founded: ",founded,"<br>"))
+```
+
+### Not to toot my own horn, but you can see how to add popups to the markers so they show data
